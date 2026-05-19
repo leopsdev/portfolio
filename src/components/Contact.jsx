@@ -72,7 +72,7 @@ export default function Contact() {
 
       <footer className="mt-24 text-center">
         <div className="inline-block bg-retro-gray text-retro-white font-mono font-bold px-6 py-2 border-2 border-retro-teal-dark">
-          © {new Date().getFullYear()} Desenvolvido com React & Tailwind.
+          © {new Date().getFullYear()} Desenvolvido com ❤️ por Leonardo Pereira Silva.
         </div>
       </footer>
     </section>

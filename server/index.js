@@ -20,7 +20,7 @@ app.use(express.json());
 app.post('/api/login', async (req, res) => {
   const { password } = req.body;
   // Simples verificação fixa para ambiente local. Ideal seria verificar no db.
-  if (password === 'admin123' || password === process.env.ADMIN_PASSWORD) {
+  if (password === process.env.ADMIN_PASSWORD) {
     res.json({ token: 'fake-jwt-token-admin' });
   } else {
     res.status(401).json({ error: 'Senha incorreta' });

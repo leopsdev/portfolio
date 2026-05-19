@@ -26,7 +26,7 @@ export default function Hero() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mt-4 text-xl text-retro-cream font-mono mb-10 max-w-2xl leading-relaxed bg-retro-gray p-4 border-retro-accent shadow-[4px_4px_0_var(--color-retro-accent)]"
           >
-            <span className="text-retro-cream font-bold mr-2">&gt;</span> Bacharel em Ciência da Computação na Universidade Federal do Cariri (UFCA) e venho construindo uma base sólida combinando desenvolvimento prático, engenharia de software e pesquisa acadêmica.
+            <span className="text-retro-cream font-bold mr-2">&gt;</span> Sou Bacharel em Ciência da Computação na Universidade Federal do Cariri (UFCA) e venho construindo uma base sólida combinando desenvolvimento prático, engenharia de software e pesquisa acadêmica.
             <span className="animate-pulse inline-block ml-1 w-2 h-5 bg-retro-cream translate-y-1"></span>
           </motion.p>
 

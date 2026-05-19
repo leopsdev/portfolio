@@ -35,7 +35,7 @@ export default function About() {
             <div className="pt-4">
               <p>
                 <span className="text-retro-teal font-bold mr-2">{">"}</span>
-                Sou um desenvolvedor Front-end apaixonado por dar vida a ideias através de código. Minha jornada na tecnologia começou com a curiosidade de entender como a web funcionava por baixo dos panos.
+                Sou um desenvolvedor apaixonado por dar vida a ideias através de código. Minha jornada na tecnologia começou com a curiosidade de entender como a web funcionava por baixo dos panos.
               </p>
               <br />
               <p>
@@ -45,7 +45,7 @@ export default function About() {
               <br />
               <p>
                 <span className="text-retro-teal font-bold mr-2">{">"}</span>
-                Estou sempre em busca de novos desafios e adoro explorar tendências de design. Quando não estou codando, provavelmente estou estudando UI/UX ou tomando um bom café.
+                Estou sempre em busca de novos desafios e adoro explorar tendências de design. Procuro sempre diversificar meus projetos e aprender coisas novas para crescer como desenvolvedor e me manter atualizado.
                 <span className="animate-pulse inline-block ml-1 w-2 h-5 bg-retro-teal translate-y-1"></span>
               </p>
 
