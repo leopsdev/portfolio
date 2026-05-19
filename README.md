@@ -1,4 +1,4 @@
-# Portfólio de Leonardo Pereira Silva
+# Meu Portfólio
 
 Este é o repositório do meu portfólio pessoal e profissional. Ele foi construído com uma stack moderna e possui um painel administrativo completo integrado para gerenciamento dinâmico de projetos e habilidades.
 
