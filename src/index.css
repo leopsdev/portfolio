@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+@theme {
+  --font-mono: "Space Mono", monospace;
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  /* Paleta exata da imagem */
+  --color-retro-teal: #135d66;
+  /* Topo Esquerdo (Verde Médio) */
+  --color-retro-teal-dark: #003c43;
+  /* Meio Esquerdo (Verde Escuro) */
+  --color-retro-cream: #f2e7dc;
+  /* Topo Direito (Creme) */
+  --color-retro-cream-dark: #cad8df;
+  /* Base Direita (Azul/Cinza Claro) */
+  --color-retro-gray: #003c43;
+  /* Substituindo o cinza quase preto pelo Verde Escuro da paleta */
+  --color-retro-accent: #77b0aa;
+  /* Meio Direito (Verde Água/Claro) */
+  --color-retro-white: #ffffff;
+  /* Base Esquerda (Branco) */
+}
+
+@layer base {
+  body {
+    background-color: var(--color-retro-teal);
+    color: var(--color-retro-cream);
+    /* Para o texto ficar legível no fundo verde médio */
+    @apply antialiased font-mono selection:bg-retro-accent selection:text-retro-gray;
+    margin: 0;
+    min-height: 100vh;
+    display: block;
+
+    /* Padrão de Grid Iso/Retro na imagem de referência */
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: center top;
+  }
+}
+
+@layer utilities {
+
+  /* Cartões estilo Neo-Brutalismo / Blocky em vez de Glassmorphism */
+  .retro-card {
+    @apply bg-white border-2 border-retro-gray shadow-[4px_4px_0_var(--color-retro-gray)] transition-transform duration-200;
+  }
+
+  .retro-card:hover {
+    @apply translate-x-[2px] translate-y-[2px] shadow-[2px_2px_0_var(--color-retro-gray)];
+  }
+
+  .retro-btn {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-retro-gray text-white font-bold border-2 border-retro-gray shadow-[4px_4px_0_#0000004d] hover:shadow-[2px_2px_0_#0000004d] hover:translate-x-[2px] transition-all;
+  }
+
+
+
+  .retro-btn-alt {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-retro-cream text-retro-gray font-bold border-2 border-retro-gray shadow-[4px_4px_0_#0000004d] hover:border-retro-gray hover:bg-retro-cream-dark hover:shadow-[2px_2px_0_#0000004d] hover:translate-x-[2px] transition-all;
+  }
+
+  .retro-btn-alt2 {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-retro-cream text-retro-gray font-bold border-2 border-retro-gray shadow-[4px_4px_0_#0000004d] hover:border-retro-gray hover:bg-retro-cream hover:shadow-[2px_2px_0_#0000004d] hover:translate-x-[2px] transition-all;
+  }
+}

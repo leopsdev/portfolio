@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Project {
+  id              Int      @id @default(autoincrement())
+  title           String
+  description     String
+  longDescription String?
+  videoUrl        String?
+  screenshots     String?  // Armazenaremos como string JSON
+  coverImage      String?  // Caminho para a capa do projeto
+  github          String?
+  live            String?
+  figma           String?  // Link do Figma
+  accentColor     String?
+  tags            Tag[]    // Relacionamento com tags
+  order           Int      @default(0) // Controla a ordenação
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String
+  projectId Int
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Skill {
+  id        Int      @id @default(autoincrement())
+  name      String
+  icon      String   // Guardaremos o nome do ícone do lucide-react (ex: 'Layout', 'Figma')
+  level     String   // 'Avançado', 'Intermediário', 'Básico'
+  isVisible Boolean  @default(true) // Controla a visibilidade na Home
+  order     Int      @default(0) // Controla a ordenação
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
