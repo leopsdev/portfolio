@@ -255,7 +255,7 @@ export default function Projects() {
                     <div className="flex flex-col gap-4">
                       {selectedProject.live && (
                         <a href={selectedProject.live} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-retro-accent text-white font-bold py-3 px-4 border-4 border-retro-gray hover:bg-[#135d66] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none text-lg">
-                          Site Ao Vivo <ExternalLink className="w-5 h-5" />
+                          Visite o site <ExternalLink className="w-5 h-5" />
                         </a>
                       )}
                       {selectedProject.github && (
