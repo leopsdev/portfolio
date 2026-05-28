@@ -28,7 +28,7 @@ class MarkdownErrorBoundary extends Component {
 
 // Componente Wrapper Seguro para renderizar Markdown com Fallback em JS Puro
 function SafeMarkdown({ content, className }) {
-  // Renderizador simples de Markdown baseado em Regex caso o ReactMarkdown falhe
+  // Renderizador simples de Markdown baseado em Regex
   const renderSimpleMarkdown = (text) => {
     if (!text) return null;
 
@@ -60,10 +60,7 @@ function SafeMarkdown({ content, className }) {
       htmlContent = htmlContent.replace(/\n/g, '<br />');
 
       // foto ![alt](url)
-
       htmlContent = htmlContent.replace(/!\{(.*?)\}\((.*?)\)/g, '<img src="$2" alt="$1" class="bg-white border-4 border-retro-gray p-2 shadow-[4px_4px_0_var(--color-retro-gray)] hover:scale-[1.02] transition-transform" />');
-
-
 
       // h1, h2, h3 - processando cabeçalhos no início do parágrafo
       if (htmlContent.startsWith('### ')) {
@@ -112,26 +109,10 @@ function SafeMarkdown({ content, className }) {
     });
   };
 
-  // Resolver incompatibilidades de empacotamento onde a exportação default fica no campo .default
-  const MarkdownComponent = typeof ReactMarkdown === 'function'
-    ? ReactMarkdown
-    : (ReactMarkdown && ReactMarkdown.default);
-
-  if (!MarkdownComponent) {
-    console.warn("ReactMarkdown não pôde ser resolvido. Usando renderizador fallback simples.");
-    return (
-      <div className={className}>
-        {renderSimpleMarkdown(content)}
-      </div>
-    );
-  }
-
   return (
-    <MarkdownErrorBoundary fallback={<div className={className}>{renderSimpleMarkdown(content)}</div>}>
-      <MarkdownComponent className={className}>
-        {content}
-      </MarkdownComponent>
-    </MarkdownErrorBoundary>
+    <div className={className}>
+      {renderSimpleMarkdown(content)}
+    </div>
   );
 }
 
@@ -400,7 +381,7 @@ export default function Projects() {
                   {/* Description area */}
                   <div className="border-l-4 border-retro-accent pl-4">
                     <SafeMarkdown
-                      content={selectedProject.longDescription || ''}
+                      content={selectedProject.longDescription || '*Nenhuma descrição detalhada cadastrada para este projeto. Acesse a página Admin para editar e preencher!*'}
                       className="relative text-retro-gray font-mono font-medium leading-relaxed text-lg text-justify"
                     />
                   </div>
