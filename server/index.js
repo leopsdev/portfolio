@@ -201,22 +201,32 @@ app.put('/api/skills/:id', async (req, res) => {
 // Rota de Email (Contato)
 app.post('/api/contact', async (req, res) => {
   const { name, email, subject, message } = req.body;
+  console.log(`📩 Nova mensagem de contato recebida de: ${name} (${email})`);
 
   // Validação básica
   if (!name || !email || !subject || !message) {
+    console.warn("⚠️ Tentativa de envio com campos em branco.");
     return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
   }
 
   try {
-    // Configurar transporter do Nodemailer
+    console.log("⚙️ Configurando transportador do Nodemailer com Gmail SMTP...");
+    // Configurar transporter do Nodemailer com timeouts robustos
     const transporter = nodemailer.createTransport({
       service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD
-      }
+      },
+      connectionTimeout: 8000, // Timeout de 8 segundos para evitar travamentos
+      greetingTimeout: 8000,
+      socketTimeout: 8000
     });
 
+    console.log("📨 Enviando email...");
     // Enviar email
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
@@ -234,10 +244,11 @@ app.post('/api/contact', async (req, res) => {
       `
     });
 
+    console.log("✅ Email enviado com sucesso!");
     res.json({ success: true, message: 'Email enviado com sucesso!' });
   } catch (err) {
-    console.error('Erro ao enviar email:', err);
-    res.status(500).json({ error: 'Erro ao enviar email. Verifique as configurações.' });
+    console.error('❌ Erro ao enviar email:', err);
+    res.status(500).json({ error: `Erro ao enviar email: ${err.message}` });
   }
 });
 
