@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 html {
   scroll-behavior: smooth;
@@ -11,18 +12,20 @@ html {
   /* Paleta exata da imagem */
   --color-retro-teal: #135d66;
   /* Topo Esquerdo (Verde Médio) */
-  --color-retro-teal-dark: #003c43;
+  --color-retro-gray: #003c43;
   /* Meio Esquerdo (Verde Escuro) */
   --color-retro-cream: #f2e7dc;
-  /* Topo Direito (Creme) */
+  /* (Creme) */
   --color-retro-cream-dark: #cad8df;
-  /* Base Direita (Azul/Cinza Claro) */
+  /* (Azul/Cinza Claro) */
   --color-retro-gray: #003c43;
   /* Substituindo o cinza quase preto pelo Verde Escuro da paleta */
   --color-retro-accent: #77b0aa;
   /* Meio Direito (Verde Água/Claro) */
   --color-retro-white: #ffffff;
   /* Base Esquerda (Branco) */
+  --color-retro-red: #ff4e4e;
+  /* Vermelho de destaque para botões e detalhes */
 }
 
 @layer base {
@@ -59,10 +62,22 @@ html {
     @apply inline-flex items-center justify-center px-6 py-3 bg-retro-gray text-white font-bold border-2 border-retro-gray shadow-[4px_4px_0_#0000004d] hover:shadow-[2px_2px_0_#0000004d] hover:translate-x-[2px] transition-all;
   }
 
+  .retro-btn-red {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-retro-red text-white font-bold border-2 border-retro-gray shadow-[4px_4px_0_#0000004d] hover:shadow-[2px_2px_0_#0000004d] hover:translate-x-[2px] transition-all;
+  }
+
+  .retro-btn-teal {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-retro-teal text-white font-bold border-2 border-retro-gray shadow-[4px_4px_0_#0000004d] hover:shadow-[2px_2px_0_#0000004d] hover:translate-x-[2px] transition-all;
+  }
+
+  .retro-input {
+    @apply p-2 border-4 border-retro-gray bg-white text-retro-teal outline-none font-mono text-sm placeholder:text-retro-accent;
+  }
+
 
 
   .retro-btn-alt {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-retro-cream text-retro-gray font-bold border-2 border-retro-gray shadow-[4px_4px_0_#0000004d] hover:border-retro-gray hover:bg-retro-cream-dark hover:shadow-[2px_2px_0_#0000004d] hover:translate-x-[2px] transition-all;
+    @apply inline-flex items-center justify-center px-6 py-3 bg-retro-cream text-retro-gray font-bold border-2 border-retro-gray shadow-[4px_4px_0_#0000004d] hover:border-retro-gray hover:bg-retro-accent hover:text-white hover:shadow-[2px_2px_0_#0000004d] hover:translate-x-[2px] transition-all;
   }
 
   .retro-btn-alt2 {

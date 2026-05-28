@@ -3,7 +3,7 @@ import { ArrowRight, Download } from 'lucide-react';
 
 export default function Hero() {
   return (
-    <section id="hero" className="min-h-screen flex items-center justify-center pt-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-retro-teal">
+    <section id="hero" className="min-h-screen flex items-center justify-center pt-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center z-10">
 
         {/* Left Content Area */}

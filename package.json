@@ -11,14 +11,17 @@
     "start": "node server/index.js"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.1",
     "cors": "^2.8.6",
     "dotenv": "^17.4.1",
     "express": "^5.2.1",
     "framer-motion": "^12.35.2",
     "lucide-react": "^0.577.0",
+    "nodemailer": "^8.0.8",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.14.0",
     "tailwindcss": "^4.2.1"
   },

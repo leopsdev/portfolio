@@ -24,6 +24,7 @@ model Project {
   accentColor     String?
   tags            Tag[]    // Relacionamento com tags
   order           Int      @default(0) // Controla a ordenação
+  isVisible       Boolean  @default(true) // Controla a visibilidade na Home
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }

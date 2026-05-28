@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Terminal, Code2, Coffee } from 'lucide-react';
+import { Terminal, Code2, Coffee, Image } from 'lucide-react';
 
 export default function About() {
   return (
@@ -21,15 +21,15 @@ export default function About() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-12 items-start">
+        <div className="grid lg:grid-cols-12 gap-12 items-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="lg:col-span-7 space-y-6 text-lg text-retro-gray font-mono leading-relaxed p-6 md:p-10 border-4 border-retro-gray bg-white shadow-[8px_8px_0_var(--color-retro-accent)] relative"
+            className="lg:col-span-7 space-y-6 text-lg text-retro-gray font-mono leading-relaxed p-6 md:p-10 border-4 border-retro-teal bg-white shadow-[8px_8px_0_var(--color-retro-accent)] relative"
           >
-            <div className="absolute top-0 left-0 w-full h-8 bg-retro-gray flex items-center px-4 gap-2">
+            <div className="absolute top-0 left-0 w-full h-8 bg-retro-teal flex items-center px-4 gap-2">
               <div className="w-3 h-3 bg-retro-accent rounded-full"></div>
             </div>
             <div className="pt-4">
@@ -52,54 +52,16 @@ export default function About() {
             </div>
           </motion.div>
 
-          <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="retro-card p-6 flex items-start gap-4 bg-white"
-            >
-              <div className="p-3 bg-retro-teal border-2 border-retro-gray shadow-[2px_2px_0_var(--color-retro-gray)] text-retro-cream shrink-0">
-                <Code2 className="w-6 h-6" />
+          <div className="lg:col-span-5 flex justify-center">
+            <div className="max-w-[360px] w-full bg-white border-4 border-retro-teal p-3 pb-8 shadow-[8px_8px_0_var(--color-retro-accent)]">
+              <div className="aspect-square w-full border-4 border-retro-teal overflow-hidden mb-6 bg-retro-cream-dark">
+                <img src="/me.png" alt="foto de perfil" className="w-full h-full object-cover" />
               </div>
-              <div>
-                <h3 className="text-xl font-black text-retro-gray mb-1 uppercase tracking-tight">Clean Code</h3>
-                <p className="text-sm text-retro-gray font-mono font-medium">Escrita de código limpo, testável e escalável.</p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="retro-card p-6 flex items-start gap-4 bg-white"
-            >
-              <div className="p-3 bg-retro-accent border-2 border-retro-gray shadow-[2px_2px_0_var(--color-retro-gray)] text-retro-gray shrink-0">
-                <Terminal className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="text-xl font-black text-retro-gray mb-1 uppercase tracking-tight">Performance</h3>
-                <p className="text-sm text-retro-gray font-mono font-medium">Otimização crítica de carregamento/rendering.</p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="retro-card p-6 flex items-start gap-4 bg-white sm:col-span-2 lg:col-span-1"
-            >
-              <div className="p-3 bg-[#c5d3e2] border-2 border-retro-gray shadow-[2px_2px_0_var(--color-retro-gray)] text-retro-gray shrink-0">
-                <Coffee className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="text-xl font-black text-retro-gray mb-1 uppercase tracking-tight">Solver</h3>
-                <p className="text-sm text-retro-gray font-mono font-medium">Resolução sistemática de problemas complexos.</p>
-              </div>
-            </motion.div>
+              <p className="font-mono text-center text-sm md:text-base text-retro-teal font-bold leading-relaxed px-2">
+                <span className="text-retro-accent font-black mr-1">{">"}</span>
+                23 anos, Desenvolvedor Web e apaixonado por tecnologia e inovações.
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -1,6 +1,139 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Github, Folder, X, PlusSquare, Figma } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import { ExternalLink, Github, Folder, X, PlusSquare, Figma, Image } from 'lucide-react';
+
+// Error Boundary para capturar falhas de renderização do ReactMarkdown
+class MarkdownErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Erro de renderização do ReactMarkdown capturado:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
+}
+
+// Componente Wrapper Seguro para renderizar Markdown com Fallback em JS Puro
+function SafeMarkdown({ content, className }) {
+  // Renderizador simples de Markdown baseado em Regex caso o ReactMarkdown falhe
+  const renderSimpleMarkdown = (text) => {
+    if (!text) return null;
+
+    // Separar por parágrafos
+    const paragraphs = text.split(/\n\s*\n/);
+
+    return paragraphs.map((p, idx) => {
+      let htmlContent = p.trim();
+      if (!htmlContent) return null;
+
+      // Escapar caracteres HTML básicos por segurança contra XSS
+      htmlContent = htmlContent
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      // Negrito (**texto** ou __texto__)
+      htmlContent = htmlContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      htmlContent = htmlContent.replace(/__(.*?)__/g, '<strong>$1</strong>');
+
+      // Itálico (*texto* ou _texto_)
+      htmlContent = htmlContent.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      htmlContent = htmlContent.replace(/_(.*?)_/g, '<em>$1</em>');
+
+      // Links simples ([texto](url))
+      htmlContent = htmlContent.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noreferrer" class="text-retro-teal underline font-bold hover:text-retro-accent">$1</a>');
+
+      // Quebras de linha simples
+      htmlContent = htmlContent.replace(/\n/g, '<br />');
+
+      // foto ![alt](url)
+
+      htmlContent = htmlContent.replace(/!\{(.*?)\}\((.*?)\)/g, '<img src="$2" alt="$1" class="bg-white border-4 border-retro-gray p-2 shadow-[4px_4px_0_var(--color-retro-gray)] hover:scale-[1.02] transition-transform" />');
+
+
+
+      // h1, h2, h3 - processando cabeçalhos no início do parágrafo
+      if (htmlContent.startsWith('### ')) {
+        return (
+          <h3 key={idx} className="text-lg font-mono font-bold text-retro-gray mt-5 mb-2">
+            <span dangerouslySetInnerHTML={{ __html: htmlContent.substring(4) }} />
+          </h3>
+        );
+      } else if (htmlContent.startsWith('## ')) {
+        return (
+          <h2 key={idx} className="text-xl font-mono font-bold text-retro-teal uppercase mt-7 mb-3 border-b-2 border-retro-teal pb-1">
+            <span dangerouslySetInnerHTML={{ __html: htmlContent.substring(3) }} />
+          </h2>
+        );
+      } else if (htmlContent.startsWith('# ')) {
+        return (
+          <h1 key={idx} className="text-2xl font-mono font-black text-retro-accent uppercase mt-9 mb-4 border-b-4 border-retro-gray pb-2">
+            <span dangerouslySetInnerHTML={{ __html: htmlContent.substring(2) }} />
+          </h1>
+        );
+      }
+
+      // Listas não ordenadas (- ou *)
+      if (htmlContent.startsWith('- ') || htmlContent.startsWith('* ') || htmlContent.includes('<br />- ') || htmlContent.includes('<br />* ')) {
+        const lines = htmlContent.split('<br />');
+        const listItems = lines.map((line) => {
+          const lineText = line.trim();
+          if (lineText.startsWith('- ') || lineText.startsWith('* ')) {
+            return `<li class="ml-6 list-disc mb-1">${lineText.substring(2)}</li>`;
+          }
+          return lineText;
+        }).join('');
+
+        return (
+          <ul key={idx} className="mb-4 font-mono text-retro-gray leading-relaxed" dangerouslySetInnerHTML={{ __html: listItems }} />
+        );
+      }
+
+      return (
+        <p
+          key={idx}
+          className="mb-4 text-justify"
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
+        />
+      );
+    });
+  };
+
+  // Resolver incompatibilidades de empacotamento onde a exportação default fica no campo .default
+  const MarkdownComponent = typeof ReactMarkdown === 'function'
+    ? ReactMarkdown
+    : (ReactMarkdown && ReactMarkdown.default);
+
+  if (!MarkdownComponent) {
+    console.warn("ReactMarkdown não pôde ser resolvido. Usando renderizador fallback simples.");
+    return (
+      <div className={className}>
+        {renderSimpleMarkdown(content)}
+      </div>
+    );
+  }
+
+  return (
+    <MarkdownErrorBoundary fallback={<div className={className}>{renderSimpleMarkdown(content)}</div>}>
+      <MarkdownComponent className={className}>
+        {content}
+      </MarkdownComponent>
+    </MarkdownErrorBoundary>
+  );
+}
 
 export default function Projects() {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -27,8 +160,9 @@ export default function Projects() {
       });
   }, []);
 
-  const totalPages = Math.ceil(projects.length / PROJECTS_PER_PAGE);
-  const displayedProjects = projects.slice((currentPage - 1) * PROJECTS_PER_PAGE, currentPage * PROJECTS_PER_PAGE);
+  const visibleProjects = projects.filter(p => p.isVisible !== false);
+  const totalPages = Math.ceil(visibleProjects.length / PROJECTS_PER_PAGE);
+  const displayedProjects = visibleProjects.slice((currentPage - 1) * PROJECTS_PER_PAGE, currentPage * PROJECTS_PER_PAGE);
 
   // Escapar scroll quando modal estiver ativo
   useEffect(() => {
@@ -43,7 +177,7 @@ export default function Projects() {
   return (
     <section id="projects" className="py-24 px-4 sm:px-6 lg:px-8 relative bg-retro-cream-dark border-t-4 border-retro-gray">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-16 border-b-4 border-retro-gray pb-4">
+        <div className="mb-16 flex items-center justify-between border-b-4 border-retro-gray pb-4">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -52,6 +186,11 @@ export default function Projects() {
           >
             Meus <span className="text-retro-teal">Projetos_</span>
           </motion.h2>
+          <div className="hidden md:flex gap-2">
+            <div className="w-4 h-4 rounded-full bg-retro-cream border-2 border-retro-gray"></div>
+            <div className="w-4 h-4 rounded-full bg-retro-accent border-2 border-retro-gray"></div>
+            <div className="w-4 h-4 rounded-full bg-retro-teal border-2 border-retro-gray"></div>
+          </div>
         </div>
 
         {loading ? (
@@ -97,7 +236,7 @@ export default function Projects() {
                     </p>
 
                     <div className="flex flex-wrap gap-2 mt-auto mb-6">
-                      {project.tags.map(tag => (
+                      {project.tags?.map(tag => (
                         <span key={tag} className="px-2 py-1 text-xs font-bold text-retro-gray bg-white border-2 border-retro-gray">
                           {tag}
                         </span>
@@ -118,13 +257,13 @@ export default function Projects() {
                           </a>
                         )}
                         {project.github && (
-                          <a href={project.github} target="_blank" rel="noreferrer" className="flex-1 flex items-center justify-center gap-1 bg-[#333] text-white font-bold py-2 border-2 border-retro-gray hover:bg-[#333] transition-colors shadow-[2px_2px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none text-sm">
+                          <a href={project.github} target="_blank" rel="noreferrer" className="flex-1 flex items-center justify-center gap-1 bg-[#8534F3] text-white font-bold py-2 border-2 border-retro-gray hover:bg-[#8534F3] transition-colors shadow-[2px_2px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none text-sm">
                             Code <Github className="w-4 h-4" />
                           </a>
                         )}
                         {project.figma && (
                           <a href={project.figma} target="_blank" rel="noreferrer" className="flex-1 flex items-center justify-center gap-1 bg-[#F24E1E] text-white font-bold py-2 border-2 border-retro-gray hover:bg-[#c23e18] transition-colors shadow-[2px_2px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none text-sm">
-                            Figma <Figma className="w-4 h-4" />
+                            Design <Image className="w-4 h-4" />
                           </a>
                         )}
                       </div>
@@ -161,7 +300,7 @@ export default function Projects() {
         )}
       </div>
 
-      {/* Retro Neo-Brutalist Modal */}
+      {/* Modal */}
       <AnimatePresence>
         {selectedProject && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
@@ -182,16 +321,16 @@ export default function Projects() {
               className="bg-white border-4 border-retro-gray shadow-[16px_16px_0_var(--color-retro-gray)] flex flex-col w-full max-w-5xl max-h-[90vh] relative z-10 overflow-hidden"
             >
               {/* Fake Window Header Bar */}
-              <div className="bg-retro-gray px-4 py-3 flex items-center justify-between">
+              <div className="bg-retro-teal px-4 py-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Folder className="text-retro-accent w-5 h-5" />
+                  <Folder className="text-retro-accent fill-current w-5 h-5" />
                   <h3 className="text-white font-bold font-mono tracking-tight uppercase text-sm md:text-base">
-                    VIEWER.EXE - {selectedProject.title}
+                    VISÃO.EXE - {selectedProject.title}
                   </h3>
                 </div>
                 <button
                   onClick={() => setSelectedProject(null)}
-                  className="bg-retro-accent border-2 border-retro-gray p-1 text-white hover:bg-[#ff4e4e] hover:translate-y-[2px] transform transition-all shadow-[2px_2px_0_var(--color-retro-gray)] hover:shadow-none"
+                  className="bg-retro-accent border-2 border-retro-gray p-1 text-white hover:bg-retro-red hover:translate-y-[2px] transform transition-all shadow-[2px_2px_0_var(--color-retro-gray)] hover:shadow-none"
                   aria-label="Cerrar modal"
                 >
                   <X className="w-5 h-5" />
@@ -202,96 +341,78 @@ export default function Projects() {
               <div className="flex-1 overflow-y-auto w-full bg-retro-cream p-4 md:p-8">
                 <div className="flex flex-col gap-8 max-w-4xl mx-auto">
 
-                  {/* Top Header & Tags */}
+                  {/* Top Header */}
                   <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                    <h4 className="text-3xl md:text-5xl font-black text-retro-gray uppercase tracking-tight" style={{ textShadow: "3px 3px 0 var(--color-retro-cream-dark)" }}>
+                    <h4 className="text-3xl md:text-5xl font-black text-retro-accent uppercase tracking-tight" style={{ textShadow: "3px 3px 0 var(--color-retro-gray)" }}>
                       {selectedProject.title}
                     </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedProject.tags.map(tag => (
-                        <span key={tag} className="px-3 py-1 text-xs font-bold text-white bg-retro-teal border-2 border-retro-gray shadow-[2px_2px_0_var(--color-retro-gray)]">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
                   </div>
 
                   {/* Main Video Player */}
-                  <div className="w-full bg-retro-cream-dark p-3 md:p-4 border-4 border-retro-gray shadow-[6px_6px_0_var(--color-retro-gray)]">
-                    <div className="bg-white border-4 border-retro-gray p-2 flex flex-col">
-                      {/* Fake inner window toolbar */}
-                      <div className="border-b-4 border-retro-gray pb-2 mb-2 flex gap-2">
-                        <div className="w-3 h-3 rounded-full bg-retro-accent border-2 border-retro-gray"></div>
-                        <div className="w-3 h-3 rounded-full bg-retro-teal border-2 border-retro-gray"></div>
-                      </div>
 
-                      {/* Video area */}
-                      <div className="relative w-full bg-retro-gray flex items-center justify-center overflow-hidden border-2 border-retro-gray aspect-video">
-                        <video
-                          src={selectedProject.videoUrl}
-                          controls
-                          autoPlay
-                          muted
-                          loop
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.parentElement.innerHTML = '<div class="flex items-center justify-center w-full h-full text-white font-mono">SEU VÍDEO AQUI</div>';
-                          }}
-                        />
-                      </div>
+                  <div className="bg-retro-cream-dark border-4 border-retro-gray p-2 flex flex-col shadow-[6px_6px_0_var(--color-retro-gray)]">
+                    {/* Fake inner window toolbar */}
+
+
+                    {/* Video area */}
+                    <div className="relative w-full bg-retro-gray flex items-center justify-center overflow-hidden border-2 border-retro-gray aspect-video">
+                      <video
+                        src={selectedProject.videoUrl}
+                        controls
+                        autoPlay
+                        muted
+                        loop
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.parentElement.innerHTML = '<div class="flex items-center justify-center w-full h-full text-white font-mono">SEU VÍDEO AQUI</div>';
+                        }}
+                      />
                     </div>
+
+                    <div className="border-b-4 border-retro-gray pb-2 mt-2 flex justify-center gap-2 ">
+                      <div className="w-3 h-3 rounded-full bg-retro-teal border-2 border-retro-gray"></div>
+                      <div className="w-3 h-3 rounded-full bg-retro-accent border-2 border-retro-gray"></div>
+                      <div className="w-3 h-3 rounded-full bg-retro-accent border-2 border-retro-gray"></div>
+                    </div>
+
                   </div>
+                  {/* Action Buttons */}
+                  <div className="flex justify-center gap-4">
+                    {selectedProject.live && (
+                      <a href={selectedProject.live} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-retro-accent text-white font-bold py-3 px-4 border-4 border-retro-gray hover:bg-[#135d66] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none text-lg">
+                        Visite o site <ExternalLink className="w-5 h-5" />
+                      </a>
+                    )}
+                    {selectedProject.github && (
+                      <a href={selectedProject.github} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#8534F3] text-white font-bold py-3 px-4 border-4 border-retro-gray hover:bg-[#8534F3] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none text-lg">
+                        Repositório <Github className="w-5 h-5" />
+                      </a>
+                    )}
+                    {selectedProject.figma && (
+                      <a href={selectedProject.figma} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#F24E1E] text-white font-bold py-3 px-4 border-4 border-retro-gray hover:bg-[#c23e18] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none text-lg">
+                        Design <Image className="w-5 h-5" />
+                      </a>
+                    )}
+                  </div>
+
 
                   {/* Description area */}
-                  <div className="grid md:grid-cols-3 gap-8 items-start">
-                    <div className="md:col-span-2 border-l-4 border-retro-accent pl-4">
-                      <p className="text-retro-gray font-mono font-medium leading-relaxed text-lg text-justify">
-                        {selectedProject.longDescription}
-                      </p>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex flex-col gap-4">
-                      {selectedProject.live && (
-                        <a href={selectedProject.live} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-retro-accent text-white font-bold py-3 px-4 border-4 border-retro-gray hover:bg-[#135d66] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none text-lg">
-                          Visite o site <ExternalLink className="w-5 h-5" />
-                        </a>
-                      )}
-                      {selectedProject.github && (
-                        <a href={selectedProject.github} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-retro-gray text-white font-bold py-3 px-4 border-4 border-retro-gray hover:bg-[#333] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none text-lg">
-                          Repositório <Github className="w-5 h-5" />
-                        </a>
-                      )}
-                      {selectedProject.figma && (
-                        <a href={selectedProject.figma} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#F24E1E] text-white font-bold py-3 px-4 border-4 border-retro-gray hover:bg-[#c23e18] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none text-lg">
-                          Figma <Figma className="w-5 h-5" />
-                        </a>
-                      )}
-                    </div>
+                  <div className="border-l-4 border-retro-accent pl-4">
+                    <SafeMarkdown
+                      content={selectedProject.longDescription || ''}
+                      className="relative text-retro-gray font-mono font-medium leading-relaxed text-lg text-justify"
+                    />
                   </div>
 
-                  {/* Screenshots Grid View */}
-                  {selectedProject.screenshots && selectedProject.screenshots.length > 0 && (
-                    <div className="mt-8 border-t-4 border-retro-gray pt-8">
-                      <h5 className="font-bold font-mono text-retro-teal-dark mb-6 uppercase md:text-xl">{">>"} Galeria_</h5>
-                      <div className="grid sm:grid-cols-2 gap-6">
-                        {selectedProject.screenshots.map((screenshot, idx) => (
-                          <div key={idx} className="bg-white border-4 border-retro-gray p-2 shadow-[4px_4px_0_var(--color-retro-gray)] hover:scale-[1.02] transition-transform">
-                            <img
-                              src={screenshot}
-                              alt={`${selectedProject.title} screenshot ${idx + 1}`}
-                              className="w-full h-auto border-2 border-retro-gray"
-                              onError={(e) => {
-                                e.target.onerror = null;
-                                e.target.src = "https://placehold.co/600x400/1a1a1a/f2e7dc?text=PRINT+AQUI&font=mono";
-                              }}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  {/* Tags */}
+                  <div className="flex flex-wrap justify-end gap-2 mt-4">
+                    {selectedProject.tags?.map(tag => (
+                      <span key={tag} className="px-4 py-2 text-sm font-bold text-white bg-retro-teal border-2 border-retro-gray shadow-[2px_2px_0_var(--color-retro-gray)]">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
 
                 </div>
               </div>

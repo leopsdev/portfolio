@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 
@@ -49,7 +50,7 @@ app.get('/api/projects', async (req, res) => {
 });
 
 app.post('/api/projects', async (req, res) => {
-  const { title, description, longDescription, videoUrl, screenshots, coverImage, tags, github, live, figma, accentColor } = req.body;
+  const { title, description, longDescription, videoUrl, screenshots, coverImage, tags, github, live, figma, accentColor, isVisible } = req.body;
   try {
     const newProject = await prisma.project.create({
       data: {
@@ -63,6 +64,7 @@ app.post('/api/projects', async (req, res) => {
         live,
         figma,
         accentColor,
+        isVisible: isVisible !== false,
         tags: {
           create: tags?.map(tag => ({ name: tag })) || []
         }
@@ -101,7 +103,7 @@ app.put('/api/projects/reorder', async (req, res) => {
 });
 
 app.put('/api/projects/:id', async (req, res) => {
-  const { title, description, longDescription, videoUrl, screenshots, coverImage, tags, github, live, figma, accentColor } = req.body;
+  const { title, description, longDescription, videoUrl, screenshots, coverImage, tags, github, live, figma, accentColor, isVisible } = req.body;
   try {
     const updatedProject = await prisma.project.update({
       where: { id: Number(req.params.id) },
@@ -116,6 +118,7 @@ app.put('/api/projects/:id', async (req, res) => {
         live,
         figma,
         accentColor,
+        isVisible: isVisible !== false,
         tags: {
           deleteMany: {},
           create: tags?.map(tag => ({ name: tag })) || []
@@ -195,7 +198,48 @@ app.put('/api/skills/:id', async (req, res) => {
   }
 });
 
+// Rota de Email (Contato)
+app.post('/api/contact', async (req, res) => {
+  const { name, email, subject, message } = req.body;
 
+  // Validação básica
+  if (!name || !email || !subject || !message) {
+    return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+  }
+
+  try {
+    // Configurar transporter do Nodemailer
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD
+      }
+    });
+
+    // Enviar email
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_TO,
+      replyTo: email,
+      subject: `Nova mensagem de contato: ${subject}`,
+      html: `
+        <h2>Nova mensagem de contato do portfólio</h2>
+        <p><strong>Nome:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Assunto:</strong> ${subject}</p>
+        <hr>
+        <p><strong>Mensagem:</strong></p>
+        <p>${message.replace(/\n/g, '<br>')}</p>
+      `
+    });
+
+    res.json({ success: true, message: 'Email enviado com sucesso!' });
+  } catch (err) {
+    console.error('Erro ao enviar email:', err);
+    res.status(500).json({ error: 'Erro ao enviar email. Verifique as configurações.' });
+  }
+});
 
 const PORT = 3001;
 app.listen(PORT, () => {

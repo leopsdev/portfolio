@@ -39,7 +39,7 @@ export default function Skills() {
       <div className="max-w-7xl mx-auto relative z-20">
         <div className="mb-16 flex items-center gap-4">
           {/* Decorative retro arrows */}
-          <div className="hidden md:flex gap-1 text-white font-black text-2xl">
+          <div className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter" style={{ textShadow: "4px 4px 0 var(--color-retro-gray)" }}>
             {">>>"}
           </div>
           <motion.h2
@@ -87,7 +87,7 @@ export default function Skills() {
 
                     <h3 className="font-bold text-retro-gray mb-1 uppercase text-sm tracking-wide">{skill.name}</h3>
                     <div className="w-full bg-retro-gray h-1 mt-2 mb-2"></div>
-                    <span className="text-xs text-retro-teal-dark font-mono font-bold">{skill.level}</span>
+                    <span className="text-xs text-retro-gray font-mono font-bold">{skill.level}</span>
                   </motion.div>
                 );
               })}

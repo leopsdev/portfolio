@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { Trash2, ArrowUp, ArrowDown, Save, Edit } from 'lucide-react';
+import { Trash2, ArrowUp, ArrowDown, Save, Edit, Eye, EyeClosed } from 'lucide-react';
 
 export default function Admin() {
   const navigate = useNavigate();
@@ -15,7 +15,8 @@ export default function Admin() {
   const [newSkill, setNewSkill] = useState({ name: '', icon: 'Check', level: 'Básico', isVisible: true });
   const [newProject, setNewProject] = useState({
     title: '', description: '', longDescription: '', videoUrl: '',
-    screenshots: '', coverImage: '', tags: '', github: '', live: '', figma: '', accentColor: 'bg-retro-accent'
+    screenshots: '', coverImage: '', tags: '', github: '', live: '', figma: '', accentColor: 'bg-retro-accent',
+    isVisible: true
   });
 
   const [editingProjectId, setEditingProjectId] = useState(null);
@@ -134,7 +135,8 @@ export default function Admin() {
 
     setNewProject({
       title: '', description: '', longDescription: '', videoUrl: '',
-      screenshots: '', coverImage: '', tags: '', github: '', live: '', figma: '', accentColor: 'bg-retro-accent'
+      screenshots: '', coverImage: '', tags: '', github: '', live: '', figma: '', accentColor: 'bg-retro-accent',
+      isVisible: true
     });
     fetchData();
   };
@@ -164,7 +166,8 @@ export default function Admin() {
         github: project.github || '',
         live: project.live || '',
         figma: project.figma || '',
-        accentColor: project.accentColor || 'bg-retro-accent'
+        accentColor: project.accentColor || 'bg-retro-accent',
+        isVisible: project.isVisible !== false
       });
       setEditingProjectId(id);
       setActiveTab('projects');
@@ -176,16 +179,17 @@ export default function Admin() {
     setEditingProjectId(null);
     setNewProject({
       title: '', description: '', longDescription: '', videoUrl: '',
-      screenshots: '', coverImage: '', tags: '', github: '', live: '', figma: '', accentColor: 'bg-retro-accent'
+      screenshots: '', coverImage: '', tags: '', github: '', live: '', figma: '', accentColor: 'bg-retro-accent',
+      isVisible: true
     });
   }
 
   return (
-    <div className="min-h-screen bg-retro-cream-dark relative">
-      <Navbar />
+    <div className="min-h-screen relative">
+      {/* <Navbar /> */}
 
-      <div className="max-w-6xl mx-auto pt-32 px-4 pb-20">
-        <h1 className="text-4xl font-black text-retro-gray mb-8 uppercase">_Admin Panel</h1>
+      <div className="max-w-6xl mx-auto pt-15 px-4 pb-20">
+        <h1 className="text-4xl md:text-5xl font-black text-white pb-5" style={{ textShadow: "4px 4px 0 var(--color-retro-gray)" }}>PAINEL ADMIN</h1>
 
         <div className="flex gap-4 mb-8">
           <button
@@ -213,9 +217,9 @@ export default function Admin() {
             <div className="bg-retro-cream p-6 border-4 border-retro-gray shadow-[8px_8px_0_var(--color-retro-gray)]">
               <h2 className="text-2xl font-bold mb-4 font-mono text-retro-teal">{editingSkillId ? '* Atualizar Skill' : '+ Add Skill'}</h2>
               <form onSubmit={handleAddSkill} className="flex flex-col gap-4">
-                <input required placeholder="Nome (Ex: React)" value={newSkill.name} onChange={e => setNewSkill({ ...newSkill, name: e.target.value })} className="p-3 border-4 border-retro-gray bg-white  text-retro-teal focus:border-retro-accent outline-none font-mono" />
-                <input required placeholder="Ícone Lucide ou URL da Imagem" value={newSkill.icon} onChange={e => setNewSkill({ ...newSkill, icon: e.target.value })} className="p-3 border-4 border-retro-gray bg-white text-retro-teal focus:border-retro-accent outline-none font-mono" />
-                <select value={newSkill.level} onChange={e => setNewSkill({ ...newSkill, level: e.target.value })} className="p-3 border-4 border-retro-gray bg-white text-retro-teal outline-none font-mono font-bold">
+                <input required placeholder="Nome (Ex: React)" value={newSkill.name} onChange={e => setNewSkill({ ...newSkill, name: e.target.value })} className="retro-input" />
+                <input required placeholder="Ícone Lucide ou URL da Imagem" value={newSkill.icon} onChange={e => setNewSkill({ ...newSkill, icon: e.target.value })} className="retro-input" />
+                <select value={newSkill.level} onChange={e => setNewSkill({ ...newSkill, level: e.target.value })} className="retro-input">
                   <option value="Básico">Básico</option>
                   <option value="Intermediário">Intermediário</option>
                   <option value="Avançado">Avançado</option>
@@ -225,22 +229,22 @@ export default function Admin() {
                   <label htmlFor="isVisibleSkill" className="font-bold font-mono text-retro-teal text-sm cursor-pointer">Visível na Home?</label>
                 </div>
                 <div className="flex gap-2 mt-2">
-                  <button type="submit" className="retro-btn flex-1">{editingSkillId ? 'Salvar Edição' : 'Salvar Skill'}</button>
+                  <button type="submit" className="retro-btn-teal flex-1">{editingSkillId ? 'Salvar Edição' : 'Salvar Skill'}</button>
                   {editingSkillId && (
-                    <button type="button" onClick={cancelEditSkill} className="retro-btn-alt flex-1 border-gray-400 bg-gray-200 text-gray-700">Cancelar</button>
+                    <button type="button" onClick={cancelEditSkill} className="retro-btn-red flex-1">Cancelar</button>
                   )}
                 </div>
               </form>
             </div>
 
-            <div className="bg-retro-cream p-6 border-4 border-retro-gray shadow-[8px_8px_0_var(--color-retro-gray)]">
+            <div className="bg-retro-cream p-6 border-4 border-retro-gray shadow-[8px_8px_0_var(--color-retro-gray)] h-[700px]">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold font-mono text-retro-gray">{'>>'} Skills Cadastradas</h2>
                 <button onClick={() => handleSaveOrder('skills')} className="text-sm bg-retro-teal text-white px-3 py-1 border-2 border-retro-gray hover:opacity-80 flex items-center gap-1 font-bold">
                   <Save className="w-4 h-4" /> Salvar
                 </button>
               </div>
-              <div className="flex flex-col gap-2 max-h-[400px] overflow-y-auto pr-2">
+              <div className="flex flex-col gap-2 max-h-[700px] overflow-y-auto pr-2">
                 {skills.map((skill, index) => (
                   <div key={skill.id} className="flex items-center justify-between p-3 border-2 border-retro-gray bg-white">
                     <div className="flex items-center gap-2">
@@ -249,9 +253,11 @@ export default function Admin() {
                         <button onClick={() => moveItem(skills, index, 'down', setSkills)} className="text-retro-gray hover:text-retro-teal"><ArrowDown className="w-4 h-4" /></button>
                       </div>
                       <span className="font-bold text-retro-gray">{skill.name}</span>
-                      <span className="text-xs font-mono text-retro-teal-dark ml-2">[{skill.level}]</span>
-                      {skill.isVisible === false && (
-                        <span className="text-xs bg-red-100 text-red-600 px-2 py-0.5 ml-2 font-bold uppercase border border-red-300">Oculto</span>
+                      <span className="text-xs font-mono text-retro-gray ml-2">[{skill.level}]</span>
+                      {skill.isVisible === false ? (
+                        <EyeClosed className="w-4 h-4 text-retro-red" />
+                      ) : (
+                        <Eye className="w-4 h-4 text-retro-teal" />
                       )}
                     </div>
                     <div className="flex gap-2">
@@ -274,20 +280,24 @@ export default function Admin() {
             <div className="bg-retro-cream p-6 border-4 border-retro-gray shadow-[8px_8px_0_var(--color-retro-gray)] h-fit">
               <h2 className="text-2xl font-bold mb-4 font-mono text-retro-teal">{editingProjectId ? '* Atualizar Projeto' : '+ Add Projeto'}</h2>
               <form onSubmit={handleAddProject} className="flex flex-col gap-3">
-                <input required placeholder="Título do Projeto" value={newProject.title} onChange={e => setNewProject({ ...newProject, title: e.target.value })} className="p-2 border-4 border-retro-gray bg-white text-retro-teal outline-none font-mono text-sm" />
-                <input required placeholder="Descrição Breve" value={newProject.description} onChange={e => setNewProject({ ...newProject, description: e.target.value })} className="p-2 border-4 border-retro-gray bg-white text-retro-teal outline-none font-mono text-sm" />
-                <textarea required placeholder="Descrição Longa" value={newProject.longDescription} onChange={e => setNewProject({ ...newProject, longDescription: e.target.value })} className="p-2 border-4 border-retro-gray bg-white text-retro-teal outline-none font-mono text-sm min-h-[100px]" />
-                <input placeholder="URL do Vídeo (.mp4)" value={newProject.videoUrl} onChange={e => setNewProject({ ...newProject, videoUrl: e.target.value })} className="p-2 border-4 border-retro-gray bg-white text-retro-teal outline-none font-mono text-sm" />
-                <input placeholder="URL da Capa do Projeto" value={newProject.coverImage} onChange={e => setNewProject({ ...newProject, coverImage: e.target.value })} className="p-2 border-4 border-retro-gray bg-white text-retro-teal outline-none font-mono text-sm" />
-                <input placeholder="URL das Prints (separadas por vírgula)" value={newProject.screenshots} onChange={e => setNewProject({ ...newProject, screenshots: e.target.value })} className="p-2 border-4 border-retro-gray bg-white text-retro-teal outline-none font-mono text-sm" />
-                <input placeholder="Tags (separadas por vírgula, Ex: React, Node)" value={newProject.tags} onChange={e => setNewProject({ ...newProject, tags: e.target.value })} className="p-2 border-4 border-retro-gray bg-white text-retro-teal outline-none font-mono text-sm" />
-                <input placeholder="Link GitHub" value={newProject.github} onChange={e => setNewProject({ ...newProject, github: e.target.value })} className="p-2 border-4 border-retro-gray bg-white text-retro-teal outline-none font-mono text-sm flex-1" />
-                <input placeholder="Link Site Vivo" value={newProject.live} onChange={e => setNewProject({ ...newProject, live: e.target.value })} className="p-2 border-4 border-retro-gray bg-white text-retro-teal outline-none font-mono text-sm flex-1" />
-                <input placeholder="Link Figma" value={newProject.figma} onChange={e => setNewProject({ ...newProject, figma: e.target.value })} className="p-2 border-4 border-retro-gray bg-white text-retro-teal outline-none font-mono text-sm flex-1" />
+                <input required placeholder="Título do Projeto" value={newProject.title} onChange={e => setNewProject({ ...newProject, title: e.target.value })} className="retro-input" />
+                <input required placeholder="Descrição Breve" value={newProject.description} onChange={e => setNewProject({ ...newProject, description: e.target.value })} className="retro-input" />
+                <textarea required placeholder="Descrição Longa" value={newProject.longDescription} onChange={e => setNewProject({ ...newProject, longDescription: e.target.value })} className="retro-input min-h-[100px]" />
+                <input placeholder="URL do Vídeo (.mp4)" value={newProject.videoUrl} onChange={e => setNewProject({ ...newProject, videoUrl: e.target.value })} className="retro-input" />
+                <input placeholder="URL da Capa do Projeto" value={newProject.coverImage} onChange={e => setNewProject({ ...newProject, coverImage: e.target.value })} className="retro-input" />
+                <input placeholder="URL das Prints (separadas por vírgula)" value={newProject.screenshots} onChange={e => setNewProject({ ...newProject, screenshots: e.target.value })} className="retro-input" />
+                <input placeholder="Tags (separadas por vírgula, Ex: React, Node)" value={newProject.tags} onChange={e => setNewProject({ ...newProject, tags: e.target.value })} className="retro-input" />
+                <input placeholder="Link GitHub" value={newProject.github} onChange={e => setNewProject({ ...newProject, github: e.target.value })} className="retro-input flex-1" />
+                <input placeholder="Link Site Vivo" value={newProject.live} onChange={e => setNewProject({ ...newProject, live: e.target.value })} className="retro-input flex-1" />
+                <input placeholder="Link Figma" value={newProject.figma} onChange={e => setNewProject({ ...newProject, figma: e.target.value })} className="retro-input flex-1" />
+                <div className="flex items-center gap-2 mt-1">
+                  <input type="checkbox" id="isVisibleProject" checked={newProject.isVisible} onChange={e => setNewProject({ ...newProject, isVisible: e.target.checked })} className="w-5 h-5 accent-retro-teal" />
+                  <label htmlFor="isVisibleProject" className="font-bold font-mono text-retro-teal text-sm cursor-pointer">Visível na Home?</label>
+                </div>
                 <div className="flex gap-2 mt-2">
-                  <button type="submit" className="retro-btn flex-1">{editingProjectId ? 'Salvar Edição' : 'Salvar Projeto'}</button>
+                  <button type="submit" className="retro-btn-teal flex-1">{editingProjectId ? 'Salvar Edição' : 'Salvar Projeto'}</button>
                   {editingProjectId && (
-                    <button type="button" onClick={cancelEditProject} className="retro-btn-alt flex-1 border-gray-400 bg-gray-200 text-gray-700">Cancelar</button>
+                    <button type="button" onClick={cancelEditProject} className="retro-btn-red flex-1">Cancelar</button>
                   )}
                 </div>
               </form>
@@ -305,10 +315,18 @@ export default function Admin() {
                   <div key={project.id} className="flex flex-col p-3 border-2 border-retro-gray bg-white relative group">
                     <div className="flex items-center gap-2 mb-1">
                       <div className="flex flex-col gap-1 items-center justify-center mr-1">
+                        {/* BOTÕES DE ORDENAÇÃO */}
+                        {project.isVisible === false ? (
+                          <EyeClosed className="w-4 h-4 text-retro-red" />
+                        ) : (
+                          <Eye className="w-4 h-4 text-retro-teal" />
+                        )}
+
                         <button onClick={() => moveItem(projects, index, 'up', setProjects)} className="text-retro-gray hover:text-retro-teal"><ArrowUp className="w-4 h-4" /></button>
                         <button onClick={() => moveItem(projects, index, 'down', setProjects)} className="text-retro-gray hover:text-retro-teal"><ArrowDown className="w-4 h-4" /></button>
                       </div>
                       <span className="font-bold text-retro-teal truncate max-w-[350px]">{project.title}</span>
+
                     </div>
                     <span className="text-xs font-mono text-retro-teal line-clamp-1 ml-6">{project.description}</span>
                     <button
