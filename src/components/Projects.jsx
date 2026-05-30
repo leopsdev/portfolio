@@ -123,7 +123,22 @@ export default function Projects() {
 
   // Paginação
   const [currentPage, setCurrentPage] = useState(1);
-  const PROJECTS_PER_PAGE = 3;
+  const [projectsPerPage, setProjectsPerPage] = useState(3);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setProjectsPerPage(1);
+      } else if (window.innerWidth < 1024) {
+        setProjectsPerPage(2);
+      } else {
+        setProjectsPerPage(3);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     fetch('/api/projects')
@@ -142,8 +157,15 @@ export default function Projects() {
   }, []);
 
   const visibleProjects = projects.filter(p => p.isVisible !== false);
-  const totalPages = Math.ceil(visibleProjects.length / PROJECTS_PER_PAGE);
-  const displayedProjects = visibleProjects.slice((currentPage - 1) * PROJECTS_PER_PAGE, currentPage * PROJECTS_PER_PAGE);
+  const totalPages = Math.ceil(visibleProjects.length / projectsPerPage) || 1;
+  const displayedProjects = visibleProjects.slice((currentPage - 1) * projectsPerPage, currentPage * projectsPerPage);
+
+  // Ajusta a página atual se ela ficar fora dos limites após o redimensionamento do viewport
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [totalPages, currentPage]);
 
   // Escapar scroll quando modal estiver ativo
   useEffect(() => {
@@ -260,7 +282,7 @@ export default function Projects() {
                 <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="retro-btn-alt2 disabled:opacity-50 "
+                  className="retro-btn-alt2 disabled:opacity-50"
                 >
                   {'< Voltar'}
                 </button>
@@ -284,7 +306,7 @@ export default function Projects() {
       {/* Modal */}
       <AnimatePresence>
         {selectedProject && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-6">
             {/* Backdrop Layer */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -299,7 +321,7 @@ export default function Projects() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white border-4 border-retro-gray shadow-[16px_16px_0_var(--color-retro-gray)] flex flex-col w-full max-w-5xl max-h-[90vh] relative z-10 overflow-hidden"
+              className="flex bg-white md:border-4 border-retro-gray md:shadow-[16px_16px_0_var(--color-retro-gray)] flex-col w-full h-full md:h-auto md:max-w-5xl md:max-h-[90vh] relative overflow-hidden"
             >
               {/* Fake Window Header Bar */}
               <div className="bg-retro-teal px-4 py-3 flex items-center justify-between">
@@ -323,7 +345,7 @@ export default function Projects() {
                 <div className="flex flex-col gap-8 max-w-4xl mx-auto">
 
                   {/* Top Header */}
-                  <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                  <div className="md:flex hidden flex-col md:flex-row md:items-end justify-between gap-4">
                     <h4 className="text-3xl md:text-5xl font-black text-retro-accent uppercase tracking-tight" style={{ textShadow: "3px 3px 0 var(--color-retro-gray)" }}>
                       {selectedProject.title}
                     </h4>
@@ -359,27 +381,28 @@ export default function Projects() {
 
                   </div>
                   {/* Action Buttons */}
-                  <div className="flex justify-center gap-4">
+                  <div className="flex justify-center gap-4 flex-wrap">
                     {selectedProject.live && (
-                      <a href={selectedProject.live} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-retro-accent text-white font-bold py-3 px-4 border-4 border-retro-gray hover:bg-[#135d66] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none text-lg">
-                        Visite o site <ExternalLink className="w-5 h-5" />
+                      <a href={selectedProject.live} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-retro-accent text-white font-bold md:py-3 md:px-4 py-2 px-3 border-4 border-retro-gray hover:bg-[#135d66] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none md:text-lg text-xs">
+                        Visite <ExternalLink className="md:w-5 md:h-5 w-3 h-3" />
                       </a>
+
                     )}
                     {selectedProject.github && (
-                      <a href={selectedProject.github} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#8534F3] text-white font-bold py-3 px-4 border-4 border-retro-gray hover:bg-[#8534F3] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none text-lg">
-                        Repositório <Github className="w-5 h-5" />
+                      <a href={selectedProject.github} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#8534F3] text-white font-bold md:py-3 md:px-4 py-3 px-3 border-4 border-retro-gray hover:bg-[#8534F3] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none md:text-lg text-xs">
+                        Repositório <Github className="md:w-5 md:h-5 w-3 h-3" />
                       </a>
                     )}
                     {selectedProject.figma && (
-                      <a href={selectedProject.figma} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#F24E1E] text-white font-bold py-3 px-4 border-4 border-retro-gray hover:bg-[#c23e18] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none text-lg">
-                        Design <Image className="w-5 h-5" />
+                      <a href={selectedProject.figma} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#F24E1E] text-white font-bold md:py-3 md:px-4 py-3 px-3 border-4 border-retro-gray hover:bg-[#c23e18] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none md:text-lg text-xs">
+                        Design <Image className="md:w-5 md:h-5 w-3 h-3" />
                       </a>
                     )}
                   </div>
 
 
                   {/* Description area */}
-                  <div className="border-l-4 border-retro-accent pl-4">
+                  <div className="md:border-l-4 border-retro-accent md:pl-4">
                     <SafeMarkdown
                       content={selectedProject.longDescription || '*Nenhuma descrição detalhada cadastrada para este projeto. Acesse a página Admin para editar e preencher!*'}
                       className="relative text-retro-gray font-mono font-medium leading-relaxed text-lg text-justify"
@@ -398,6 +421,7 @@ export default function Projects() {
                 </div>
               </div>
             </motion.div>
+
           </div>
         )}
       </AnimatePresence>

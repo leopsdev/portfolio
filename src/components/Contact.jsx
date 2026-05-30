@@ -75,7 +75,7 @@ export default function Contact() {
 
           <div className="w-full h-1 bg-retro-gray mb-8"></div>
 
-          <p className="text-retro-gray font-mono font-bold text-xl mb-10 max-w-2xl mx-auto">
+          <p className="text-retro-gray font-mono font-bold md:text-xl mb-10 max-w-2xl mx-auto">
             Estou sempre aberto a novas oportunidades e colaborações. Preencha o formulário abaixo ou me contacte através das minhas redes!
           </p>
 
@@ -92,7 +92,7 @@ export default function Contact() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 text-retro-accent border-2 border-retro-gray bg-white font-mono focus:outline-none focus:bg-retro-teal-light placeholder:text-retro-accent"
+                className="w-full md:px-4 px-2 md:py-3 py-2 text-retro-teal border-2 border-retro-gray bg-white font-mono focus:outline-none focus:bg-retro-teal-light placeholder:text-retro-accent md:placeholder:text-md placeholder:text-sm"
                 placeholder="Seu nome"
               />
             </div>
@@ -108,7 +108,7 @@ export default function Contact() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 text-retro-accent border-2 border-retro-gray bg-white font-mono focus:outline-none focus:bg-retro-teal-light placeholder:text-retro-accent"
+                className="w-full md:px-4 px-2 md:py-3 py-2 text-retro-teal border-2 border-retro-gray bg-white font-mono focus:outline-none focus:bg-retro-teal-light placeholder:text-retro-accent md:placeholder:text-md placeholder:text-sm"
                 placeholder="seu-email@exemplo.com"
               />
             </div>
@@ -124,7 +124,7 @@ export default function Contact() {
                 value={formData.subject}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 text-retro-accent border-2 border-retro-gray bg-white font-mono focus:outline-none focus:bg-retro-teal-light placeholder:text-retro-accent"
+                className="w-full md:px-4 px-2 md:py-3 py-2 text-retro-teal border-2 border-retro-gray bg-white font-mono focus:outline-none focus:bg-retro-teal-light placeholder:text-retro-accent md:placeholder:text-md placeholder:text-sm"
                 placeholder="Sobre o quê?"
               />
             </div>
@@ -140,7 +140,7 @@ export default function Contact() {
                 onChange={handleChange}
                 required
                 rows="5"
-                className="w-full px-4 py-3 text-retro-accent border-2 border-retro-gray bg-white font-mono focus:outline-none focus:bg-retro-teal-light resize-none placeholder:text-retro-accent"
+                className="w-full md:px-4 px-2 md:py-3 py-2 text-retro-teal border-2 border-retro-gray bg-white font-mono focus:outline-none focus:bg-retro-teal-light resize-none placeholder:text-retro-accent md:placeholder:text-md placeholder:text-sm"
                 placeholder="Digite sua mensagem aqui..."
               ></textarea>
             </div>
@@ -148,8 +148,8 @@ export default function Contact() {
             {/* Mensagem de Status */}
             {status && (
               <div className={`mb-6 p-4 border-2 font-mono font-bold ${status === 'success'
-                ? 'bg-retro-accent/30 border-retro-gray text-retro-gray'
-                : 'bg-retro-red/10 border-retro-red text-retro-red'
+                ? 'bg-retro-accent/30 border-retro-gray/50 text-retro-gray/70'
+                : 'bg-retro-red/10 border-retro-red/50 text-retro-red/70'
                 }`}>
                 {statusMessage}
               </div>
@@ -167,7 +167,7 @@ export default function Contact() {
           {/* Redes Sociais */}
           <div className="w-full h-1 bg-retro-gray mb-8"></div>
 
-          <p className="text-retro-gray font-mono font-bold text-xl mb-6">
+          <p className="text-retro-gray font-mono font-bold md:text-xl mb-6">
             Ou entre em contato pelas minhas redes:
           </p>
 
@@ -177,39 +177,39 @@ export default function Contact() {
                 href="https://github.com/leopsdev"
                 target="_blank"
                 rel="noreferrer"
-                className="p-3 bg-white border-4 border-retro-gray shadow-[4px_4px_0_var(--color-retro-gray)] text-retro-gray hover:bg-[#8534F3] hover:text-white transition-colors hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
+                className="md:p-3 p-2 bg-white border-4 border-retro-gray shadow-[4px_4px_0_var(--color-retro-gray)] text-retro-gray hover:bg-[#8534F3] hover:text-white transition-colors hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
                 aria-label="GitHub"
               >
-                <Github className="w-8 h-8" />
+                <Github className="md:w-8 w-6 h-6 md:h-8" />
               </a>
               <a
                 href="https://www.linkedin.com/in/ctrl-leo/"
                 target="_blank"
                 rel="noreferrer"
-                className="p-3 bg-white border-4 border-retro-gray shadow-[4px_4px_0_var(--color-retro-gray)] text-retro-gray hover:bg-[#0077B5] hover:text-white transition-colors hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
+                className="md:p-3 p-2 bg-white border-4 border-retro-gray shadow-[4px_4px_0_var(--color-retro-gray)] text-retro-gray hover:bg-[#0077B5] hover:text-white transition-colors hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
                 aria-label="LinkedIn"
               >
-                <Linkedin className="w-8 h-8" />
+                <Linkedin className="md:w-8 w-6 h-6 md:h-8" />
               </a>
               <a
                 href="http://lattes.cnpq.br/9740244958701761"
                 target="_blank"
                 rel="noreferrer"
-                className="p-3 bg-white border-4 border-retro-gray shadow-[4px_4px_0_var(--color-retro-gray)] text-retro-gray hover:bg-retro-accent hover:text-white transition-colors hover:translate-x-1 hover:translate-y-1 hover:shadow-none group"
+                className="md:p-3 p-2 bg-white border-4 border-retro-gray shadow-[4px_4px_0_var(--color-retro-gray)] text-retro-gray hover:bg-retro-accent hover:text-white transition-colors hover:translate-x-1 hover:translate-y-1 hover:shadow-none group"
                 aria-label="Currículo Lattes"
                 title="Currículo Lattes"
               >
-                <GraduationCap className="w-8 h-8" />
+                <GraduationCap className="md:w-8 w-6 h-6 md:h-8" />
               </a>
               <a
                 href="https://www.instagram.com/ctrl_leo/"
                 target="_blank"
                 rel="noreferrer"
-                className="p-3 bg-white border-4 border-retro-gray shadow-[4px_4px_0_var(--color-retro-gray)] text-retro-gray hover:bg-[#E1306C] hover:text-white transition-colors hover:translate-x-1 hover:translate-y-1 hover:shadow-none group"
+                className="md:p-3 p-2 bg-white border-4 border-retro-gray shadow-[4px_4px_0_var(--color-retro-gray)] text-retro-gray hover:bg-[#E1306C] hover:text-white transition-colors hover:translate-x-1 hover:translate-y-1 hover:shadow-none group"
                 aria-label="Instagram"
                 title="Instagram"
               >
-                <Instagram className="w-8 h-8" />
+                <Instagram className="md:w-8 w-6 h-6 md:h-8" />
               </a>
             </div>
           </div>

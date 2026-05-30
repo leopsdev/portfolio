@@ -22,6 +22,18 @@ export default function About() {
         </div>
 
         <div className="grid lg:grid-cols-12 gap-12 items-center">
+          <div className="md:hidden lg:col-span-5 flex justify-center">
+            <div className="max-w-[360px] w-full bg-white border-4 border-retro-teal p-3 pb-8 shadow-[8px_8px_0_var(--color-retro-accent)]">
+              <div className="aspect-square w-full border-4 border-retro-teal overflow-hidden mb-6 bg-retro-cream-dark">
+                <img src="/me.png" alt="foto de perfil" className="w-full h-full object-cover" />
+              </div>
+              <p className="font-mono text-center text-sm md:text-base text-retro-teal font-bold leading-relaxed px-2">
+                <span className="text-retro-accent font-black mr-1">{">"}</span>
+                23 anos, Desenvolvedor Web e apaixonado por tecnologia e inovações.
+              </p>
+            </div>
+          </div>
+
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -33,26 +45,26 @@ export default function About() {
               <div className="w-3 h-3 bg-retro-accent rounded-full"></div>
             </div>
             <div className="pt-4">
-              <p>
-                <span className="text-retro-teal font-bold mr-2">{">"}</span>
+              <p className="text-base md:text-lg">
+                <span className="text-retro-teal font-bold mr-2 text-base md:text-lg">{">"}</span>
                 Sou um desenvolvedor apaixonado por dar vida a ideias através de código. Minha jornada na tecnologia começou com a curiosidade de entender como a web funcionava por baixo dos panos.
               </p>
               <br />
-              <p>
-                <span className="text-retro-teal font-bold mr-2">{">"}</span>
+              <p className="text-base md:text-lg">
+                <span className="text-retro-teal font-bold mr-2 text-base md:text-lg">{">"}</span>
                 Hoje, foco em construir aplicações web modernas, acessíveis e focadas na experiência do usuário, combinando UI arrojada com código limpo e eficiente.
               </p>
               <br />
-              <p>
-                <span className="text-retro-teal font-bold mr-2">{">"}</span>
+              <p className="text-base md:text-lg">
+                <span className="text-retro-teal font-bold mr-2 text-base md:text-lg">{">"}</span>
                 Estou sempre em busca de novos desafios e adoro explorar tendências de design. Procuro sempre diversificar meus projetos e aprender coisas novas para crescer como desenvolvedor e me manter atualizado.
-                <span className="animate-pulse inline-block ml-1 w-2 h-5 bg-retro-teal translate-y-1"></span>
+                <span className="animate-pulse inline-block ml-1 w-2 md:h-5 h-4 bg-retro-teal translate-y-1"></span>
               </p>
 
             </div>
           </motion.div>
 
-          <div className="lg:col-span-5 flex justify-center">
+          <div className="hidden md:flex lg:col-span-5 flex justify-center">
             <div className="max-w-[360px] w-full bg-white border-4 border-retro-teal p-3 pb-8 shadow-[8px_8px_0_var(--color-retro-accent)]">
               <div className="aspect-square w-full border-4 border-retro-teal overflow-hidden mb-6 bg-retro-cream-dark">
                 <img src="/me.png" alt="foto de perfil" className="w-full h-full object-cover" />

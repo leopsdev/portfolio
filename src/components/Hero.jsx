@@ -13,7 +13,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className=" text-5xl sm:text-6xl md:text-7xl font-extrabold text-white mt-4 mb-14 tracking-tight leading-tight mix-blend-difference"
+            className="text-4xl md:text-5xl sm:text-6xl md:text-7xl font-extrabold text-white mt-4 mb-14 tracking-tight leading-tight mix-blend-difference"
             style={{ textShadow: "4px 4px 0 var(--color-retro-gray)" }}
           >
             Leonardo Pereira Silva <br />
@@ -24,7 +24,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-4 text-xl text-retro-cream font-mono mb-10 max-w-2xl leading-relaxed bg-retro-gray p-4 border-retro-accent shadow-[4px_4px_0_var(--color-retro-accent)]"
+            className="mt-4 md:text-xl text-md text-retro-cream font-mono mb-10 max-w-2xl leading-relaxed bg-retro-gray p-4 border-retro-accent shadow-[4px_4px_0_var(--color-retro-accent)]"
           >
             <span className="text-retro-cream font-bold mr-2">&gt;</span> Sou Bacharel em Ciência da Computação na Universidade Federal do Cariri (UFCA) e venho construindo uma base sólida combinando desenvolvimento prático, engenharia de software e pesquisa acadêmica.
             <span className="animate-pulse inline-block ml-1 w-2 h-5 bg-retro-cream translate-y-1"></span>
@@ -55,13 +55,13 @@ export default function Hero() {
           className="order-1 lg:order-2 flex justify-center relative"
         >
           {/* Decorative abstract shape behind computer */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-retro-accent rounded-full border-4 border-retro-gray -z-10 shadow-[8px_8px_0_var(--color-retro-gray)]"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-50 h-50 md:w-72 md:h-72 bg-retro-accent rounded-full border-4 border-retro-gray -z-10 shadow-[8px_8px_0_var(--color-retro-gray)]"></div>
 
           {/* New Computer Image from User */}
           <img
             src="/computer.png"
             alt="Retro Computer Setup"
-            className="w-full max-w-[400px] drop-shadow-[12px_12px_0_var(--color-retro-gray)] relative z-10"
+            className="w-full max-w-[250px] md:max-w-[400px] relative z-10"
           />
         </motion.div>
 
