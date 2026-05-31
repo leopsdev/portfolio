@@ -4,7 +4,6 @@ import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import nodemailer from 'nodemailer';
 
 dotenv.config();
 
@@ -89,7 +88,7 @@ app.put('/api/projects/reorder', async (req, res) => {
   const { items } = req.body;
   try {
     await prisma.$transaction(
-      items.map(item => 
+      items.map(item =>
         prisma.project.update({
           where: { id: item.id },
           data: { order: item.order }
@@ -135,11 +134,11 @@ app.put('/api/projects/:id', async (req, res) => {
 // Rotas de Habilidades (Skills)
 app.get('/api/skills', async (req, res) => {
   try {
-    const skills = await prisma.skill.findMany({ 
+    const skills = await prisma.skill.findMany({
       orderBy: [
         { order: 'asc' },
         { id: 'desc' }
-      ] 
+      ]
     });
     res.json(skills);
   } catch (err) {
@@ -172,7 +171,7 @@ app.put('/api/skills/reorder', async (req, res) => {
   const { items } = req.body;
   try {
     await prisma.$transaction(
-      items.map(item => 
+      items.map(item =>
         prisma.skill.update({
           where: { id: item.id },
           data: { order: item.order }
@@ -198,53 +197,49 @@ app.put('/api/skills/:id', async (req, res) => {
   }
 });
 
-// Rota de Email (Contato)
+// Rota de Email (Contato) usando a API do Resend via HTTP
 app.post('/api/contact', async (req, res) => {
   const { name, email, subject, message } = req.body;
   console.log(`📩 Nova mensagem de contato recebida de: ${name} (${email})`);
 
-  // Validação básica
   if (!name || !email || !subject || !message) {
     console.warn("⚠️ Tentativa de envio com campos em branco.");
     return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
   }
 
   try {
-    console.log("⚙️ Configurando transportador do Nodemailer com Gmail SMTP...");
-    // Configurar transporter do Nodemailer com timeouts robustos
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
+    console.log("📨 Enviando email via HTTP API do Resend...");
+
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
       },
-      connectionTimeout: 8000, // Timeout de 8 segundos para evitar travamentos
-      greetingTimeout: 8000,
-      socketTimeout: 8000
+      body: JSON.stringify({
+        from: 'Contato Portfólio <onboarding@resend.dev>',
+        to: process.env.EMAIL_TO || 'leonardo.pereirasilva03@gmail.com',
+        reply_to: email,
+        subject: `Nova mensagem de contato: ${subject}`,
+        html: `
+          <h2>Nova mensagem de contato do portfólio</h2>
+          <p><strong>Nome:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Assunto:</strong> ${subject}</p>
+          <hr>
+          <p><strong>Mensagem:</strong></p>
+          <p>${message.replace(/\n/g, '<br>')}</p>
+        `
+      })
     });
 
-    console.log("📨 Enviando email...");
-    // Enviar email
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_TO,
-      replyTo: email,
-      subject: `Nova mensagem de contato: ${subject}`,
-      html: `
-        <h2>Nova mensagem de contato do portfólio</h2>
-        <p><strong>Nome:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Assunto:</strong> ${subject}</p>
-        <hr>
-        <p><strong>Mensagem:</strong></p>
-        <p>${message.replace(/\n/g, '<br>')}</p>
-      `
-    });
+    const data = await response.json();
 
-    console.log("✅ Email enviado com sucesso!");
+    if (!response.ok) {
+      throw new Error(data.message || `Erro do Resend (Status: ${response.status})`);
+    }
+
+    console.log("✅ Email enviado com sucesso via Resend!");
     res.json({ success: true, message: 'Email enviado com sucesso!' });
   } catch (err) {
     console.error('❌ Erro ao enviar email:', err);

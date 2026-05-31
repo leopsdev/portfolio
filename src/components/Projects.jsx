@@ -292,7 +292,7 @@ export default function Projects() {
                 <button
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  // px-6 py-2 bg-retro-cream text-retro-gray font-bold font-mono border-4 border-retro-gray disabled:opacity-50 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[4px_4px_0_var(--color-retro-gray)] transition-all shadow-none
+
                   className="retro-btn-alt2 cursor-pointer disabled:opacity-50 "
                 >
                   {'Avançar >'}
