@@ -26,6 +26,7 @@ class MarkdownErrorBoundary extends Component {
   }
 }
 
+
 // Componente Wrapper Seguro para renderizar Markdown com Fallback em JS Puro
 function SafeMarkdown({ content, className }) {
   // Renderizador simples de Markdown baseado em Regex
@@ -344,58 +345,63 @@ export default function Projects() {
               <div className="flex-1 overflow-y-auto w-full bg-retro-cream p-4 md:p-8">
                 <div className="flex flex-col gap-8 max-w-4xl mx-auto">
 
-                  {/* Top Header */}
-                  <div className="md:flex hidden flex-col md:flex-row md:items-end justify-between gap-4">
-                    <h4 className="text-3xl md:text-5xl font-black text-retro-accent uppercase tracking-tight" style={{ textShadow: "3px 3px 0 var(--color-retro-gray)" }}>
-                      {selectedProject.title}
-                    </h4>
-                  </div>
+                  {/*imaguem do projeto*/}
+                  {selectedProject.coverImage && selectedProject.videoUrl.trim() == '' ? (
+                    <img src={selectedProject.coverImage} alt={selectedProject.title} className="w-full h-[220px] md:h-[300px] object-cover bg-white border-4 border-retro-gray p-2 shadow-[4px_4px_0_var(--color-retro-gray)] hover:scale-[1.02] transition-transform" />
+                  )
+                    : <div className="md:flex hidden flex-col md:flex-row md:items-end justify-between gap-4">
+                      <h4 className="text-3xl md:text-5xl font-black text-retro-accent uppercase tracking-tight" style={{ textShadow: "3px 3px 0 var(--color-retro-gray)" }}>
+                        {selectedProject.title}
+                      </h4>
+                    </div>
+                  }
+
+
 
                   {/* Main Video Player */}
+                  {selectedProject.videoUrl && selectedProject.videoUrl.trim() !== '' && (
+                    <div id="video" className="bg-retro-cream-dark border-4 border-retro-gray p-2 flex flex-col shadow-[6px_6px_0_var(--color-retro-gray)]">
+                      {/* Fake inner window toolbar */}
 
-                  <div className="bg-retro-cream-dark border-4 border-retro-gray p-2 flex flex-col shadow-[6px_6px_0_var(--color-retro-gray)]">
-                    {/* Fake inner window toolbar */}
+                      {/* Video area */}
+                      <div className="relative w-full bg-retro-gray flex items-center justify-center overflow-hidden border-2 border-retro-gray aspect-video">
+                        <video
+                          src={selectedProject.videoUrl}
+                          controls
+                          autoPlay
+                          muted
+                          loop
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.parentElement.innerHTML = '<div class="flex items-center justify-center w-full h-full text-white font-mono">SEU VÍDEO AQUI</div>';
+                          }}
+                        />
+                      </div>
 
-
-                    {/* Video area */}
-                    <div className="relative w-full bg-retro-gray flex items-center justify-center overflow-hidden border-2 border-retro-gray aspect-video">
-                      <video
-                        src={selectedProject.videoUrl}
-                        controls
-                        autoPlay
-                        muted
-                        loop
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.parentElement.innerHTML = '<div class="flex items-center justify-center w-full h-full text-white font-mono">SEU VÍDEO AQUI</div>';
-                        }}
-                      />
+                      <div className="border-b-4 border-retro-gray pb-2 mt-2 flex justify-center gap-2 ">
+                        <div className="w-3 h-3 rounded-full bg-retro-teal border-2 border-retro-gray"></div>
+                        <div className="w-3 h-3 rounded-full bg-retro-accent border-2 border-retro-gray"></div>
+                        <div className="w-3 h-3 rounded-full bg-retro-accent border-2 border-retro-gray"></div>
+                      </div>
                     </div>
-
-                    <div className="border-b-4 border-retro-gray pb-2 mt-2 flex justify-center gap-2 ">
-                      <div className="w-3 h-3 rounded-full bg-retro-teal border-2 border-retro-gray"></div>
-                      <div className="w-3 h-3 rounded-full bg-retro-accent border-2 border-retro-gray"></div>
-                      <div className="w-3 h-3 rounded-full bg-retro-accent border-2 border-retro-gray"></div>
-                    </div>
-
-                  </div>
+                  )}
                   {/* Action Buttons */}
                   <div className="flex justify-center gap-4 flex-wrap">
                     {selectedProject.live && (
-                      <a href={selectedProject.live} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-retro-accent text-white font-bold md:py-3 md:px-4 py-2 px-3 border-3 border-retro-gray hover:bg-[#135d66] transition-colors shadow-[2px_2px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none md:text-lg text-xs">
-                        Site <ExternalLink className="md:w-5 md:h-5 w-3 h-3" />
+                      <a href={selectedProject.live} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-retro-accent text-white font-bold md:py-3 md:px-4 py-2 px-3 border-3 border-retro-gray hover:bg-[#135d66] transition-colors shadow-[2px_2px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none md:text-lg text-sm">
+                        Site <ExternalLink className="md:w-5 md:h-5 w-4 h-4" />
                       </a>
 
                     )}
                     {selectedProject.github && (
-                      <a href={selectedProject.github} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#8534F3] text-white font-bold md:py-3 md:px-4 py-3 px-3 border-3 border-retro-gray hover:bg-[#8534F3] transition-colors shadow-[2px_2px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none md:text-lg text-xs">
-                        Code <Github className="md:w-5 md:h-5 w-3 h-3" />
+                      <a href={selectedProject.github} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#8534F3] text-white font-bold md:py-3 md:px-4 py-3 px-3 border-3 border-retro-gray hover:bg-[#8534F3] transition-colors shadow-[2px_2px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none md:text-lg text-sm">
+                        Code <Github className="md:w-5 md:h-5 w-4 h-4" />
                       </a>
                     )}
                     {selectedProject.figma && (
-                      <a href={selectedProject.figma} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#F24E1E] text-white font-bold md:py-3 md:px-4 py-3 px-3 border-3 border-retro-gray hover:bg-[#c23e18] transition-colors shadow-[2px_2px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none md:text-lg text-xs">
-                        Design <Image className="md:w-5 md:h-5 w-3 h-3" />
+                      <a href={selectedProject.figma} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#F24E1E] text-white font-bold md:py-3 md:px-4 py-3 px-3 border-3 border-retro-gray hover:bg-[#c23e18] transition-colors shadow-[2px_2px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none md:text-lg text-sm">
+                        Design <Image className="md:w-5 md:h-5 w-4 h-4" />
                       </a>
                     )}
                   </div>
