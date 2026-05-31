@@ -383,18 +383,18 @@ export default function Projects() {
                   {/* Action Buttons */}
                   <div className="flex justify-center gap-4 flex-wrap">
                     {selectedProject.live && (
-                      <a href={selectedProject.live} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-retro-accent text-white font-bold md:py-3 md:px-4 py-2 px-3 border-4 border-retro-gray hover:bg-[#135d66] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none md:text-lg text-xs">
-                        Visite <ExternalLink className="md:w-5 md:h-5 w-3 h-3" />
+                      <a href={selectedProject.live} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-retro-accent text-white font-bold md:py-3 md:px-4 py-2 px-3 border-3 border-retro-gray hover:bg-[#135d66] transition-colors shadow-[2px_2px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none md:text-lg text-xs">
+                        Site <ExternalLink className="md:w-5 md:h-5 w-3 h-3" />
                       </a>
 
                     )}
                     {selectedProject.github && (
-                      <a href={selectedProject.github} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#8534F3] text-white font-bold md:py-3 md:px-4 py-3 px-3 border-4 border-retro-gray hover:bg-[#8534F3] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none md:text-lg text-xs">
-                        Repositório <Github className="md:w-5 md:h-5 w-3 h-3" />
+                      <a href={selectedProject.github} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#8534F3] text-white font-bold md:py-3 md:px-4 py-3 px-3 border-3 border-retro-gray hover:bg-[#8534F3] transition-colors shadow-[2px_2px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none md:text-lg text-xs">
+                        Code <Github className="md:w-5 md:h-5 w-3 h-3" />
                       </a>
                     )}
                     {selectedProject.figma && (
-                      <a href={selectedProject.figma} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#F24E1E] text-white font-bold md:py-3 md:px-4 py-3 px-3 border-4 border-retro-gray hover:bg-[#c23e18] transition-colors shadow-[4px_4px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none md:text-lg text-xs">
+                      <a href={selectedProject.figma} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#F24E1E] text-white font-bold md:py-3 md:px-4 py-3 px-3 border-3 border-retro-gray hover:bg-[#c23e18] transition-colors shadow-[2px_2px_0_var(--color-retro-gray)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-none md:text-lg text-xs">
                         Design <Image className="md:w-5 md:h-5 w-3 h-3" />
                       </a>
                     )}
